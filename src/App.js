@@ -2,48 +2,96 @@
 import './App.css';
 // import React, { Component } from "react"; //Do klasowego
 import React, { useState, useEffect } from "react"; //Do funkcyjnego (hooki)
-import { Button } from "./components/Button";
+// import { Button } from "./components/Button";
 
+const ListItem = ({ Text }) => {
+  const [IsColorChanged, setIsColorChanged] = useState(false);
+
+  const ToggleColorChange = () => {
+    setIsColorChanged(!IsColorChanged);
+  }
+
+  return <li style={{ color: IsColorChanged ? "red" : "blue" }} onClick={ToggleColorChange}>
+    {Text}
+  </li>
+}
+
+const ListItem2 = ({ Text }) => {
+  const [IsColorChanged, setIsColorChanged] = useState(false);
+
+  const ToggleColorChange = () => {
+    setIsColorChanged(!IsColorChanged);
+  }
+
+  return <li style={{ color: IsColorChanged ? "green" : "black" }} onClick={ToggleColorChange}>
+    {Text}
+  </li>
+}
+
+// const List = ({ListItems}) => {
+//   return (
+//     <ul>
+//       {ListItems.map((item, index) => {
+//         return <ListItem key={index} Text={item} />
+//       })}
+//     </ul>
+//   )
+// }
+
+const List = (props) => {
+  return (
+    <ul>
+      {props.children}
+    </ul>
+  )
+}
 
 const App = (props) => {
-  const [ButtonText, setButtonText] = useState("");
-  const [ButtonText2, setButtonText2] = useState("Click me");
+  const [TodoList, setTodoList] = useState(["Wyniesc smieci", "Zrobic pranie", "Wyprowadzic psa"]);
+  const [TodoList2, setTodoList2] = useState(["Isc na poczte", "Wyprowadzic psa"]);
 
-  //5 guzików i co 2 sekundy w kazdym kolejnym zmiana tekstu na jakis
-
-  //componentDidMount()
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log("Wywołanie setState")
-  //     setButtonText("Nastawiłem się na zmienną początkową")
-  //   }, 5000);
-  // }, []);
+  const [InputValues, setInputValues] = useState({
+    Number: "",
+    Url: ""
+  })
 
   useEffect(() => {
-    if (ButtonText.length > 0) {
-      setButtonText2("Zmieniłem się po zmianie buttona pierwszego")
-    }
-  }, [ButtonText]);
+    console.log(InputValues)
+  }, [InputValues])
 
-
-  const OnChangeButtonText = () => {
-    setButtonText("Zmieniłem swoją nazwę");
-  }
-
-  const OnChangeButtonText2 = () => {
-    setButtonText2("Click me 2");
-  }
-
-  const OnChangeButtonText3 = () => {
-    setButtonText("Guzik2");
-    setButtonText2("Click me 2");
+  const OnInputChange = (e) => {
+    setInputValues({
+      // Number: InputValues.Number,
+      // Url: InputValues.Url, to to samo co ...InputValues
+      ...InputValues,
+      [e.target.name]: e.target.value
+    })
   }
 
   return (
     <div>
-      <Button OnClick={OnChangeButtonText} Text={ButtonText} />
-      <Button OnClick={OnChangeButtonText2} Text={ButtonText2} />
-      <Button OnClick={OnChangeButtonText3} Text="Zmien wszystko" />
+      {/* <List ListItems={TodoList} />
+      <List ListItems={TodoList2} /> */}
+
+      <input onChange={OnInputChange} type="text" name="Number" disabled={true} value={InputValues.Number} />
+      <input onChange={OnInputChange} type="text" name="Url" value={InputValues.Url} />
+
+      <List>
+        {TodoList.map((item, index) => {
+          return <ListItem key={index} Text={item} />
+        })}
+      </List>
+
+      <List>
+        {TodoList2.map((item, index) => {
+          return <ListItem2 key={index} Text={item} />
+        })}
+      </List>
+      {/* <ul>
+        {TodoList2.map((item, index) => {
+          return <ListItem key={index} Text={item} />
+        })}
+      </ul> */}
     </div>
   );
 }
